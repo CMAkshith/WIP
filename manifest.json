@@ -1,9 +1,10 @@
 {
   "name": "WIP",
+  "short_name": "WIP",
   "theme_color": "#2196f3",
   "background_color": "#2196f3",
   "display": "standalone",
   "orientation": "portrait",
-  "scope": "/",
+  "scope": "/WIP",
   "start_url": "/index.html"
 }
