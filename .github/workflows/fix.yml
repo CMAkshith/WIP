@@ -2,29 +2,14 @@ name: Build APK
 on: [push, workflow_dispatch]
 
 jobs:
-  build:
+  convert:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Website to APK
+        uses: khaledattya/website-to-apk@v1.0.0
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
-
-      - name: Build APK
-        run: |
-          # This is a standard web-to-apk process
-          # If this step feels complex, I have a simpler one-line alternative below
-          echo "Building your PenguinMod project..."
-          
-      - name: Build with simple action
-        uses: owen-carter/website-to-apk@v1.1.0
-        with:
-          url: https://cmakshith.github.io/WIP/
-          name: "MyPenguinGame"
+          url: "https://google.com"
+          name: "MyGame"
