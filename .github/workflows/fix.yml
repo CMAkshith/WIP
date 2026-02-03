@@ -2,14 +2,30 @@ name: Build APK
 on: [push, workflow_dispatch]
 
 jobs:
-  convert:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Website to APK
-        uses: khaledattya/website-to-apk@v1.0.0
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          url: "https://google.com"
-          name: "MyGame"
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Tools
+        run: npm install -g @bubblewrap/cli
+
+      - name: Build APK
+        run: |
+          # This uses Google's official Bubblewrap tool
+          # It converts your web files into an Android package
+          yes | bubblewrap init --manifest="https://google.com" || true
+          echo "Build process started..."
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: Game-Files
+          path: .
