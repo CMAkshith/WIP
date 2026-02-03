@@ -8,24 +8,27 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: set up JDK 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Tools
+      - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
       - name: Build APK
         run: |
-          # This uses Google's official Bubblewrap tool
-          # It converts your web files into an Android package
-          yes | bubblewrap init --manifest="https://google.com" || true
-          echo "Build process started..."
+          # 1. Initialize the project (using your repo as the source)
+          # We use --skipPwaValidation because PenguinMod might not have a full manifest yet
+          bubblewrap init --manifest="https://CMAkshith.github.io/WIP/manifest.json" --skipPwaValidation || true
+          
+          # 2. Build the actual APK
+          # We use --skipSigning for now so it doesn't ask for a password you don't have
+          bubblewrap build --skipSigning
 
-      - name: Upload Result
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Game-Files
-          path: .
+          name: MyGame-APK-Download
+          path: "*.apk"
