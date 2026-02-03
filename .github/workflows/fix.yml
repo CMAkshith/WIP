@@ -8,26 +8,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Build Android App
+        # This is the most stable PWA-to-APK tool in 2026
+        uses: pwa-builder/pwa-action@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build APK
-        run: |
-          # Install the tool
-          npm install -g @bubblewrap/cli
+          # Point this to your live PenguinMod site
+          url: https://cmakshith.github.io/WIP/
+          # This tool handles all the JDK/SDK stuff internally
+          # No "y/n" questions allowed!
           
-          # This command creates the project silently
-          # It uses your manifest.json and the icon you just got
-          yes | bubblewrap init --manifest=./manifest.json --directory=./build/
-          
-          # This builds the actual APK file
-          cd build && yes | bubblewrap build --skipSigning
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PenguinGame-APK
-          path: build/*.apk
+          path: ./*_pwa.apk
