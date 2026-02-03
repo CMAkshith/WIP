@@ -19,9 +19,18 @@ jobs:
 
       - name: Build APK
         run: |
-          # We use 'npx' to ensure it finds the command
-          # We point to the local file './manifest.json' instead of a URL
-          npx bubblewrap init --manifest=./manifest.json --no-prompt
+          # 1. We tell Bubblewrap where everything is manually
+          # This avoids the "Do you want to install JDK?" question
+          echo "y" | bubblewrap doctor
           
-          # This builds it without asking for any manual input
-          npx bubblewrap build --skipSigning
+          # 2. We use 'init' but we feed it the answers before it can ask
+          printf ".\n.\n.\n.\n.\n" | bubblewrap init --manifest=./manifest.json
+          
+          # 3. Build the APK and skip the signing (passwords)
+          bubblewrap build --skipSigning
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyGame-APK
+          path: "*.apk"
