@@ -8,16 +8,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build APK (Simplified)
-        # We are using a pre-configured tool that doesn't ask questions
-        uses: jonasmerlin/pwa-builder-action@v1
+      - name: Build APK
+        run: |
+          # Install the tool
+          npm install -g @bubblewrap/cli
+          
+          # This command creates the project silently
+          # It uses your manifest.json and the icon you just got
+          yes | bubblewrap init --manifest=./manifest.json --directory=./build/
+          
+          # This builds the actual APK file
+          cd build && yes | bubblewrap build --skipSigning
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          # Your live site URL
-          url: https://cmakshith.github.io/WIP/
-          # This tool handles the "Yes/No" questions automatically
+          name: PenguinGame-APK
+          path: build/*.apk
