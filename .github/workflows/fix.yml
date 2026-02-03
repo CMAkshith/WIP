@@ -8,29 +8,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
-
-      - name: Build APK
-        run: |
-          # 1. We tell Bubblewrap where everything is manually
-          # This avoids the "Do you want to install JDK?" question
-          echo "y" | bubblewrap doctor
-          
-          # 2. We use 'init' but we feed it the answers before it can ask
-          printf ".\n.\n.\n.\n.\n" | bubblewrap init --manifest=./manifest.json
-          
-          # 3. Build the APK and skip the signing (passwords)
-          bubblewrap build --skipSigning
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Build APK (Simplified)
+        # We are using a pre-configured tool that doesn't ask questions
+        uses: jonasmerlin/pwa-builder-action@v1
         with:
-          name: MyGame-APK
-          path: "*.apk"
+          # Your live site URL
+          url: https://cmakshith.github.io/WIP/
+          # This tool handles the "Yes/No" questions automatically
