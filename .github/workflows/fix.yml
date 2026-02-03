@@ -17,16 +17,11 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Build APK (Silent Mode)
+      - name: Build APK
         run: |
-          # The 'yes |' forces a 'Y' answer to any prompt
-          yes | bubblewrap init --manifest="https://cmakshith.github.io/WIP/manifest.json"
+          # We use 'npx' to ensure it finds the command
+          # We point to the local file './manifest.json' instead of a URL
+          npx bubblewrap init --manifest=./manifest.json --no-prompt
           
-          # This builds the project without asking for passwords
-          bubblewrap build --skipSigning
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: MyGame-APK
-          path: "*.apk"
+          # This builds it without asking for any manual input
+          npx bubblewrap build --skipSigning
